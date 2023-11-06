@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="plumecomax"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="ecomaxController">
+		<label>Plum EcoMAX Binding Thing</label>
+		<description>Plum ecoMAX boiler controller binding</description>
+
+		<channels>
+			<channel id="boiler_state" typeId="boiler_state"/>
+			<channel id="boiler_temp" typeId="boiler_temp"/>
+			<channel id="water_heater_temp" typeId="water_heater_temp"/>
+			<channel id="outside_temp" typeId="outside_temp"/>
+			<channel id="boiler_temp_target" typeId="boiler_temp_target"/>
+			<channel id="water_heater_target" typeId="water_heater_target"/>
+			<channel id="heating_mode" typeId="heating_mode"/>
+			<channel id="exhaust_temp" typeId="exhaust_temp"/>
+			<channel id="feeder_temp" typeId="feeder_temp"/>
+			<channel id="return_temp" typeId="return_temp"/>
+			<channel id="heating_load" typeId="heating_load"/>
+			<channel id="fan_power" typeId="fan_power"/>
+			<channel id="fuel_level" typeId="fuel_level"/>
+			<channel id="fuel_consumption" typeId="fuel_consumption"/>
+			<channel id="heating_power" typeId="heating_power"/>
+			<channel id="lower_buffer_temp" typeId="lower_buffer_temp"/>
+			<channel id="upper_buffer_temp" typeId="upper_buffer_temp"/>
+			<channel id="flame_intensity" typeId="flame_intensity"/>
+		</channels>
+
+		<config-description>
+			<parameter name="serialPort" type="text" required="true">
+				<context>serial-port</context>
+				<label>Serial Port</label>
+				<description>The serial port to use (e.g Linux: /dev/ttyUSB0, Windows: COM3)</description>
+			</parameter>
+		</config-description>
+	</thing-type>
+
+	<channel-type id="boiler_state">
+		<item-type>Switch</item-type>
+		<label>Boiler power control</label>
+		<description>Control boiler state on/off</description>
+		<state pattern="%s" readOnly="false"></state>
+	</channel-type>
+	<channel-type id="boiler_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Boiler temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="water_heater_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Water heater temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="outside_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Outside temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="boiler_temp_target">
+		<item-type>Number:Temperature</item-type>
+		<label>Boiler target temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="false" min="55" max="85"></state>
+	</channel-type>
+	<channel-type id="water_heater_target">
+		<item-type>Number:Temperature</item-type>
+		<label>Water heater target temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="false"></state>
+	</channel-type>
+	<channel-type id="heating_mode">
+		<item-type>String</item-type>
+		<label>EcoMAX boiler state</label>
+		<category>Heating</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="exhaust_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Exhaust temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="feeder_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Feeder temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="return_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Return temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="heating_load">
+		<item-type>Number</item-type>
+		<label>Heating load</label>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="fan_power">
+		<item-type>Number:Power</item-type>
+		<label>Fan power</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="fuel_level">
+		<item-type>Number</item-type>
+		<label>Fuel level</label>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="fuel_consumption">
+		<item-type>Number</item-type>
+		<label>Fuel consumption</label>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="heating_power">
+		<item-type>Number</item-type>
+		<label>Heating power</label>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="lower_buffer_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Lower buffer temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="upper_buffer_temp">
+		<item-type>Number:Temperature</item-type>
+		<label>Upper buffer temperature</label>
+		<category>Temperature</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="flame_intensity">
+		<item-type>Number</item-type>
+		<label>Flame intensity</label>
+		<category>Fire</category>
+		<state pattern="%s" readOnly="true"></state>
+	</channel-type>
+</thing:thing-descriptions>
