@@ -68,9 +68,7 @@ public class DeviceData {
         return Collections.unmodifiableList(schema);
     }
 
-    public Object
-
-            getValue(int valueId) {
+    public Object getValue(int valueId) {
         Optional<SchemaValue> value = data.keySet().stream().filter(key -> key.getValueId() == valueId)
                 .map(key -> data.get(key)).findFirst();
         if (value.isPresent()) {
