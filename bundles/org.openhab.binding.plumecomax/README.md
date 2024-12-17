@@ -51,6 +51,7 @@ The following channels are supported:
 | lower_buffer_temp | Number | R                                 | Lower buffer temperature        |
 | upper_buffer_temp | Number | R                                 | Upper buffer temperature        |
 | flame_intensity | Number | R                                 | Flame intensity                 |
+| exhaust_temperature | Number | R                                 | Exhaust temperature             |
 
 
 

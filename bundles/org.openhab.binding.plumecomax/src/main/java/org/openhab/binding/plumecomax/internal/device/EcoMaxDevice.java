@@ -54,15 +54,27 @@ public class EcoMaxDevice {
     }
 
     public boolean init() {
-        this.serialPort = SerialPort.getCommPort(serialPortName);
+        return refreshSerialPortConnection();
+    }
+
+    public boolean refreshSerialPortConnection() {
+        logger.debug("(Re)init EcoMAX serial connection");
+        logger.debug("Serial port name: {}", serialPortName);
         if (this.serialPort == null) {
-            logger.error("Can't find serial port: {}", serialPortName);
-            return false;
+            logger.debug("No serial port, ok for first connection. Try to find serial port");
+            this.serialPort = SerialPort.getCommPort(serialPortName);
         }
         this.serialPort.setBaudRate(115200);
+        if (this.serialPort.isOpen()) {
+            logger.debug("Serial port active, try to close connection");
+            boolean closeStatus = this.serialPort.closePort();
+            logger.debug("Serial port close status: {}", closeStatus);
+            // We will try to reconnect regardless close status, continue
+        }
+        this.serialPort.removeDataListener();
         boolean status = serialPort.openPort();
         if (status == false) {
-            logger.error("Can't open serial port: {}", serialPortName);
+            logger.debug("Can't open serial port: {}", serialPortName);
             return false;
         }
         IncomingFrameManager frameManager = new IncomingFrameManager(this);

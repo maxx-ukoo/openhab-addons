@@ -27,6 +27,7 @@
 			<channel id="lower_buffer_temp" typeId="lower_buffer_temp"/>
 			<channel id="upper_buffer_temp" typeId="upper_buffer_temp"/>
 			<channel id="flame_intensity" typeId="flame_intensity"/>
+			<channel id="exhaust_temperature" typeId="exhaust_temperature"/>
 		</channels>
 
 		<config-description>
@@ -48,31 +49,31 @@
 		<item-type>Number:Temperature</item-type>
 		<label>Boiler temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="water_heater_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Water heater temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="outside_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Outside temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="boiler_temp_target">
 		<item-type>Number:Temperature</item-type>
 		<label>Boiler target temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="false" min="55" max="85"></state>
+		<state pattern="%s %unit%" readOnly="false" min="55" max="85"></state>
 	</channel-type>
 	<channel-type id="water_heater_target">
 		<item-type>Number:Temperature</item-type>
 		<label>Water heater target temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="false"></state>
+		<state pattern="%s %unit%" readOnly="false"></state>
 	</channel-type>
 	<channel-type id="heating_mode">
 		<item-type>String</item-type>
@@ -84,19 +85,19 @@
 		<item-type>Number:Temperature</item-type>
 		<label>Exhaust temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="feeder_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Feeder temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="return_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Return temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="heating_load">
 		<item-type>Number</item-type>
@@ -104,15 +105,15 @@
 		<state pattern="%s" readOnly="true"></state>
 	</channel-type>
 	<channel-type id="fan_power">
-		<item-type>Number:Power</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Fan power</label>
-		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<category>Power</category>
+		<state pattern="%.0f %%" readOnly="true"></state>
 	</channel-type>
 	<channel-type id="fuel_level">
-		<item-type>Number</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Fuel level</label>
-		<state pattern="%s" readOnly="true"></state>
+		<state pattern="%.0f %%" readOnly="true"></state>
 	</channel-type>
 	<channel-type id="fuel_consumption">
 		<item-type>Number</item-type>
@@ -120,26 +121,32 @@
 		<state pattern="%s" readOnly="true"></state>
 	</channel-type>
 	<channel-type id="heating_power">
-		<item-type>Number</item-type>
+		<item-type>Number:Power</item-type>
 		<label>Heating power</label>
-		<state pattern="%s" readOnly="true"></state>
+		<state pattern="%s %unit%" readOnly="true"></state>
 	</channel-type>
 	<channel-type id="lower_buffer_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Lower buffer temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="upper_buffer_temp">
 		<item-type>Number:Temperature</item-type>
 		<label>Upper buffer temperature</label>
 		<category>Temperature</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="flame_intensity">
-		<item-type>Number</item-type>
+		<item-type>Number:Dimensionless</item-type>
 		<label>Flame intensity</label>
 		<category>Fire</category>
-		<state pattern="%s" readOnly="true"></state>
+		<state pattern="%.0f %%" readOnly="true"></state>
+	</channel-type>
+	<channel-type id="exhaust_temperature">
+		<item-type>Number:Temperature</item-type>
+		<label>Exhaust temperature</label>
+		<category>Temperature</category>
+		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 </thing:thing-descriptions>
