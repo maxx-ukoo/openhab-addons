@@ -49,6 +49,7 @@ public class IncomingFrameManager {
             if (frame.getFrameType() != FrameType.MESSAGE_SENSOR_DATA) {
                 return EMPTY_RESPONSE;
             }
+            logger.debug("MESSAGE_SENSOR_DATA not skipped");
         }
         logger.debug("Processing frame: {}", frame);
         switch (frame.getFrameType()) {
@@ -73,7 +74,8 @@ public class IncomingFrameManager {
     }
 
     private byte[] processMessageSensorData(Frame frame) {
-        logger.info("Processing sensor data message");
+        logger.debug("Processing sensor data frame");
+        logger.debug("SensorData frame: {}", Frame.getRAWFrameAsString(frame));
         SensorData sensorData = MessageSensorData.fromByteArray(frame.getBody());
         device.setSensorData(sensorData);
         return EMPTY_RESPONSE;

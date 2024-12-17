@@ -13,24 +13,19 @@
 package org.openhab.binding.plumecomax.internal.device.protocol.listener;
 
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.Frame;
-import org.openhab.binding.plumecomax.internal.device.protocol.manager.IncomingFrameManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Maksym Krasovskyi - Initial contribution
  */
-public class SerialDataListener extends AbstractSerialListener {
+public class FrameMonitor extends AbstractSerialListener {
 
-    private final Logger logger = LoggerFactory.getLogger(SerialDataListener.class);
+    private final Logger logger = LoggerFactory.getLogger(FrameMonitor.class);
 
-    private final IncomingFrameManager frameManager;
-
-    public SerialDataListener(IncomingFrameManager frameManager) {
-        this.frameManager = frameManager;
-    }
-
+    @Override
     byte[] processFrame(Frame frame) {
-        return frameManager.processFrame(frame);
+        Frame.printRAWFrame(frame);
+        return new byte[0];
     }
 }

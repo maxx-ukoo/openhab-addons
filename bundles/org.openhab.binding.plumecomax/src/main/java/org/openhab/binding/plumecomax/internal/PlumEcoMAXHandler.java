@@ -12,26 +12,9 @@
  */
 package org.openhab.binding.plumecomax.internal;
 
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.BOILER_STATE;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.BOILER_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.BOILER_TEMP_TARGET;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.EXHAUST_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.FAN_POWER;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.FEEDER_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.FLAME_INTENSITY;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.FUEL_CONSUMPTION;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.FUEL_LEVEL;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.HEATING_LOAD;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.HEATING_MODE;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.HEATING_POWER;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.LOWER_BUFFER_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.OUTSIDE_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.RETURN_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.THING_TYPE_PLUM_ECOMAX_CONTROLLER;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.UPPER_BUFFER_TEMP;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.WATER_HEATER;
-import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.WATER_HEATER_TARGET;
+import static org.openhab.binding.plumecomax.internal.PlumEcoMAXBindingConstants.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -183,8 +166,10 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
     private void pollingFrameQueueCode() {
         Frame frame = EcoMaxDevice.queueFrame.poll();
         if (frame != null) {
+            logger.debug("Response frame: {}", Frame.getRAWFrameAsString(frame));
             byte[] rawFrame = frame.getRAWFrame();
-            device.getSerialPort().writeBytes(rawFrame, rawFrame.length);
+            int len = device.getSerialPort().writeBytes(rawFrame, rawFrame.length);
+            logger.debug("Response frame length: {}, wrote to serial port: {}", frame.getRAWFrame().length, len);
         }
     }
 
@@ -208,7 +193,17 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
         if (device.isAvailable()) {
             updateStatus(ThingStatus.ONLINE);
         } else {
-            updateStatus(ThingStatus.OFFLINE);
+            logger.debug("Device offline, try to reconnect");
+            boolean reconnectStatus = false;
+            synchronized (device) {
+                boolean status = device.refreshSerialPortConnection();
+            }
+            logger.debug("Device reconnect status: {}", reconnectStatus);
+            if (reconnectStatus) {
+                updateStatus(ThingStatus.UNKNOWN);
+            } else {
+                updateStatus(ThingStatus.OFFLINE);
+            }
             return;
         }
         logger.trace("Publish EcoMAX channels values");
@@ -225,30 +220,37 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
         try {
             // logger.info("Publishing channel: {}", channelUID.getIdWithoutGroup());
             State state = switch (channelUID.getIdWithoutGroup()) {
-                case BOILER_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_BOILER));
+                case BOILER_TEMP -> new QuantityType<>(
+                        (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_BOILER), SIUnits.CELSIUS);
                 case WATER_HEATER -> new QuantityType<>(42, SIUnits.CELSIUS); // TODO
-                case OUTSIDE_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_OUTDOOR));
-                case BOILER_TEMP_TARGET ->
-                    fromIntValue((Integer) device.getDeviceData().getValue(DataValue.HEATING_TARGET));
+                case OUTSIDE_TEMP -> new QuantityType<>(
+                        (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_OUTDOOR), SIUnits.CELSIUS);
+                case BOILER_TEMP_TARGET -> new QuantityType<>(
+                        (Integer) device.getDeviceData().getValue(DataValue.HEATING_TARGET), SIUnits.CELSIUS);
                 case WATER_HEATER_TARGET -> new DecimalType(DecimalType.valueOf("42"));
                 case HEATING_MODE -> new StringType(device.getSensorData().getDeviceState().toString());
-                case EXHAUST_TEMP -> new DecimalType(DecimalType.valueOf("142"));
-                case FEEDER_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_FEEDER));
-                case RETURN_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_RETURN));
-                case HEATING_LOAD -> fromIntValue(device.getSensorData().getLoad());
-                case FAN_POWER -> fromFloatValue(device.getSensorData().getFanPower());
-                case FUEL_LEVEL -> new DecimalType(device.getDeviceData().getValue(DataValue.FUEL_LEVEL).toString());
-                case FUEL_CONSUMPTION -> fromFloatValue(device.getSensorData().getFuel_consumption());
-                case HEATING_POWER -> fromFloatValue(device.getSensorData().getPower());
+                case EXHAUST_TEMP -> new QuantityType<>(
+                        (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_EXHAUST), SIUnits.CELSIUS);
+                case FEEDER_TEMP -> new QuantityType<>(
+                        (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_FEEDER), SIUnits.CELSIUS);
+                case RETURN_TEMP -> new QuantityType<>(
+                        (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_RETURN), SIUnits.CELSIUS);
+                case HEATING_LOAD -> new DecimalType(device.getSensorData().getLoad());
+                case FAN_POWER -> new DecimalType(device.getSensorData().getFanPower() / 100.00);
+                case FUEL_LEVEL ->
+                    new DecimalType(new BigDecimal(device.getDeviceData().getValue(DataValue.FUEL_LEVEL).toString())
+                            .divide(new BigDecimal("100.00")));
+                case FUEL_CONSUMPTION ->
+                    new QuantityType<>(String.format("%.1f kg/h", device.getSensorData().getFuel_consumption()));
+                case HEATING_POWER -> new QuantityType<>(String.format("%.1f kW", device.getSensorData().getPower()));
                 case LOWER_BUFFER_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_LOVER_BUFFER_UP));
+                    new QuantityType<>((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_LOVER_BUFFER_UP),
+                            SIUnits.CELSIUS);
                 case UPPER_BUFFER_TEMP ->
-                    fromFloatValue((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_UPPER_BUFFER_UP));
-                case FLAME_INTENSITY -> fromFloatValue((Float) device.getDeviceData().getValue(DataValue.FLAME_LEVEL));
+                    new QuantityType<>((Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_UPPER_BUFFER_UP),
+                            SIUnits.CELSIUS);
+                case FLAME_INTENSITY -> new QuantityType<>(
+                        String.format("%.1f %%", (Float) device.getDeviceData().getValue(DataValue.FLAME_LEVEL)));
                 default -> null;
             };
             logger.trace("Got state value: {}", state);
@@ -260,15 +262,5 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
         } catch (Exception e) {
             logger.warn("{}: {}", THING_TYPE_PLUM_ECOMAX_CONTROLLER.getId(), channelID, e);
         }
-    }
-
-    private DecimalType fromFloatValue(Float value) {
-        String strVal = value.toString();
-        logger.trace("Convert float {} to BigDecimal", strVal);
-        return DecimalType.valueOf(strVal);
-    }
-
-    private DecimalType fromIntValue(Integer value) {
-        return DecimalType.valueOf(String.format("%d", value));
     }
 }
