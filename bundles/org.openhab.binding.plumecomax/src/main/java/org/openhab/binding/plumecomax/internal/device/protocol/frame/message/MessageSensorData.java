@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -14,6 +14,7 @@ package org.openhab.binding.plumecomax.internal.device.protocol.frame.message;
 
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.protocol.DeviceState;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
 import org.openhab.binding.plumecomax.internal.device.sensor.ModuleType;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Maksym Krasovskyi - Initial contribution
  */
+@NonNullByDefault
 public class MessageSensorData {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageSensorData.class);
@@ -79,42 +81,42 @@ public class MessageSensorData {
         sensorData.setThermostat(Byte.toUnsignedInt(data[offset++]));
         // parsing versions
         String version = parseVersion(Arrays.copyOfRange(data, offset, offset + 5), ModuleType.MODULE_A);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_A, version);
             offset += 5;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.MODULE_B);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_B, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.MODULE_C);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_C, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.ECOLAMBDA);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.ECOLAMBDA, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.ECOSTER);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.ECOSTER, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.PANEL);
-        if (version != null) {
+        if (version.length() != 0) {
             sensorData.getDeviceVersions().put(ModuleType.PANEL, version);
             offset += 3;
         } else {
@@ -126,7 +128,7 @@ public class MessageSensorData {
 
     private static String parseVersion(byte[] data, ModuleType module) {
         if (data[0] == (byte) 0xFF) {
-            return null;
+            return "";
         }
         if (module == ModuleType.MODULE_A) {
             return String.format("%d.%d.%d%s%d", Byte.toUnsignedInt(data[0]), Byte.toUnsignedInt(data[1]),

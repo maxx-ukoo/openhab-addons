@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -27,6 +27,7 @@ import static org.openhab.binding.plumecomax.internal.device.protocol.frame.Fram
 
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.DeviceType;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.Frame;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
@@ -36,6 +37,7 @@ import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
  *
  * @author Maksym Krasovskyi - Initial contribution
  */
+@NonNullByDefault
 public class FrameParcer {
 
     public static Frame parce(byte[] data) {

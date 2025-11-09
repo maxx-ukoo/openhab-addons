@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -196,7 +196,7 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
             logger.debug("Device offline, try to reconnect");
             boolean reconnectStatus = false;
             synchronized (device) {
-                boolean status = device.refreshSerialPortConnection();
+                reconnectStatus = device.refreshSerialPortConnection();
             }
             logger.debug("Device reconnect status: {}", reconnectStatus);
             if (reconnectStatus) {

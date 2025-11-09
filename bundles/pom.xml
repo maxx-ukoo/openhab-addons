@@ -347,6 +347,7 @@
     <module>org.openhab.binding.plex</module>
     <module>org.openhab.binding.plugwise</module>
     <module>org.openhab.binding.plugwiseha</module>
+	<module>org.openhab.binding.plumecomax</module>
     <module>org.openhab.binding.powermax</module>
     <module>org.openhab.binding.proteusecometer</module>
     <module>org.openhab.binding.prowl</module>

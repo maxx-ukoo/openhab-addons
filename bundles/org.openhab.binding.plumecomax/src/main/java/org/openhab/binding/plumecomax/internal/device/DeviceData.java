@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -12,13 +12,9 @@
  */
 package org.openhab.binding.plumecomax.internal.device;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.protocol.schema.DataValue;
 import org.openhab.binding.plumecomax.internal.device.protocol.schema.SchemaType;
 import org.openhab.binding.plumecomax.internal.device.protocol.schema.SchemaValue;
@@ -28,6 +24,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Maksym Krasovskyi - Initial contribution
  */
+@NonNullByDefault
 public class DeviceData {
 
     private final Logger logger = LoggerFactory.getLogger(DeviceData.class);
@@ -40,7 +37,7 @@ public class DeviceData {
     private Map<SchemaType, SchemaValue> data = new HashMap<>();
 
     public boolean isDataValid() {
-        if (schema.size() == 0) {
+        if (schema.isEmpty()) {
             // logger.info("Size id zero, data not available");
             return false;
         }
@@ -68,17 +65,17 @@ public class DeviceData {
         return Collections.unmodifiableList(schema);
     }
 
-    public Object getValue(int valueId) {
-        Optional<SchemaValue> value = data.keySet().stream().filter(key -> key.getValueId() == valueId)
-                .map(key -> data.get(key)).findFirst();
-        if (value.isPresent()) {
-            return value.get().getValue();
+    public SchemaValue getValue(int valueId) {
+        Optional<SchemaValue> optionalSchemaValue = data.keySet().stream().filter(key -> key.getValueId() == valueId)
+                .map(key -> data.get(key)).filter(Objects::nonNull).findFirst();
+        if (optionalSchemaValue.isPresent()) {
+            return optionalSchemaValue.get();
         }
-        return null;
+        throw new IllegalStateException(String.format("No value with id=%d", valueId));
     }
 
     public Object getValue(DataValue dataType) {
-        return getValue(dataType.getValueId());
+        return getValue(dataType.getValueId()).getValue();
     }
 
     public void setValue(SchemaValue schemaValue) {
