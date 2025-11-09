@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -15,11 +15,15 @@ package org.openhab.binding.plumecomax.internal.device.protocol.frame;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
 /**
  * The {@link Frame} contains raw serial message
  *
  * @author Maksym Krasovskyi - Initial contribution
  */
+
+@NonNullByDefault
 public class Frame {
 
     public static final byte FRAME_START_BYTE = 0x68;
@@ -36,14 +40,14 @@ public class Frame {
     public static final int FRAME_DATA_START_BYTE = 8;
     public static final int FRAME_DATA_END_BYTE_OFFSET = -2;
 
-    private int size;
-    private DeviceType source;
-    private DeviceType destination;
-    private byte version;
-    private byte senderType;
-    private FrameType frameType;
-    private byte[] data;
-    private byte crc;
+    private int size = 0;
+    private DeviceType source = DeviceType.ALL;
+    private DeviceType destination = DeviceType.ALL;
+    private byte version = 0x00;
+    private byte senderType = 0x00;
+    private FrameType frameType = FrameType.FRAME_TYPE_UNKNOWN;
+    private byte[] data = new byte[1];
+    private byte crc = 0x00;
 
     private Frame() {
     }

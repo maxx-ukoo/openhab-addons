@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -15,6 +15,7 @@ package org.openhab.binding.plumecomax.internal.device.protocol.frame.response;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameBody;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.MessageBody;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Maksym Krasovskyi - Initial contribution
  */
+@NonNullByDefault
 public class ResponseProgramVersion implements MessageBody, FrameBody {
 
     private final Logger logger = LoggerFactory.getLogger(ResponseProgramVersion.class);

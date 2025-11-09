@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2010-2023 Contributors to the openHAB project
+/*
+ * Copyright (c) 2010-2025 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -12,6 +12,7 @@
  */
 package org.openhab.binding.plumecomax.internal.device.protocol.frame.request;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameBody;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
 import org.openhab.binding.plumecomax.internal.device.protocol.frame.MessageBody;
@@ -19,6 +20,7 @@ import org.openhab.binding.plumecomax.internal.device.protocol.frame.MessageBody
 /**
  * @author Maksym Krasovskyi - Initial contribution
  */
+@NonNullByDefault
 public class RequestStartMaster implements MessageBody, FrameBody {
     @Override
     public byte[] getMessageBody() {
