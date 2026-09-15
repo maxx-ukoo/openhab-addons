@@ -24,7 +24,7 @@ public class OutputFlags {
     private long flags;
 
     public OutputFlags(byte[] rawFlags) {
-        this.flags = (Byte.toUnsignedInt(rawFlags[3]) << 24) + (Byte.toUnsignedInt(rawFlags[2]) << 16)
+        this.flags = ((long) Byte.toUnsignedInt(rawFlags[3]) << 24) + (Byte.toUnsignedInt(rawFlags[2]) << 16)
                 + (Byte.toUnsignedInt(rawFlags[1]) << 8) + Byte.toUnsignedInt(rawFlags[0]);
         this.heating_pump_flag = (flags & 0x04) > 0;
         this.water_heater_pump_flag = (flags & 0x08) > 0;

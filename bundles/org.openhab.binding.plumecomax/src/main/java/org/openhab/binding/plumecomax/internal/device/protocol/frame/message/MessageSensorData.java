@@ -50,7 +50,7 @@ public class MessageSensorData {
             offset += 3;
         }
         int devState = Byte.toUnsignedInt(data[offset++]);
-        logger.info("Got devState value {}", devState);
+        logger.debug("Got devState value {}", devState);
         sensorData.setDeviceState(DeviceState.getDeviceState(devState));
         sensorData.setOutputsState(new OutputsState(Arrays.copyOfRange(data, offset, offset + 4)));
         offset += 4;
@@ -65,7 +65,8 @@ public class MessageSensorData {
         sensorData.setHeating_status(Byte.toUnsignedInt(data[offset++]));
         sensorData.setWater_heater_target(Byte.toUnsignedInt(data[offset++]));
         sensorData.setWater_heater_status(Byte.toUnsignedInt(data[offset++]));
-        int alertsNumber = Byte.toUnsignedInt(data[offset++]); // TODO implement alert processing, skip for now
+        // TODO implement alert processing, skip for now due no alerts on real hardware
+        int alertsNumber = Byte.toUnsignedInt(data[offset++]);
         sensorData.setFuel_level(Byte.toUnsignedInt(data[offset++]));
         sensorData.setTransmission(Byte.toUnsignedInt(data[offset++]));
         sensorData.setFanPower(Float.intBitsToFloat((((data[offset + 3] & 0xff) << 24)
@@ -81,42 +82,42 @@ public class MessageSensorData {
         sensorData.setThermostat(Byte.toUnsignedInt(data[offset++]));
         // parsing versions
         String version = parseVersion(Arrays.copyOfRange(data, offset, offset + 5), ModuleType.MODULE_A);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_A, version);
             offset += 5;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.MODULE_B);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_B, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.MODULE_C);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.MODULE_C, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.ECOLAMBDA);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.ECOLAMBDA, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.ECOSTER);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.ECOSTER, version);
             offset += 3;
         } else {
             offset++;
         }
         version = parseVersion(Arrays.copyOfRange(data, offset, offset + 3), ModuleType.PANEL);
-        if (version.length() != 0) {
+        if (!version.isEmpty()) {
             sensorData.getDeviceVersions().put(ModuleType.PANEL, version);
             offset += 3;
         } else {

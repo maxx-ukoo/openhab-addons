@@ -17,22 +17,22 @@ package org.openhab.binding.plumecomax.internal.device.sensor;
  */
 public class OutputsState {
 
-    private boolean fan;
-    private boolean feeder;
-    private boolean heating_pump;
-    private boolean water_heater_pump;
-    private boolean circulation_pump;
-    private boolean lighter;
-    private boolean alarm;
-    private boolean outer_boiler;
-    private boolean fan2_exhaust;
-    private boolean feeder2;
-    private boolean outer_feeder;
-    private boolean solar_pump;
-    private boolean fireplace_pump;
-    private boolean gcz_contactp;
-    private boolean blow_fan1;
-    private boolean blow_fan2;
+    private final boolean fan;
+    private final boolean feeder;
+    private final boolean heating_pump;
+    private final boolean water_heater_pump;
+    private final boolean circulation_pump;
+    private final boolean lighter;
+    private final boolean alarm;
+    private final boolean outer_boiler;
+    private final boolean fan2_exhaust;
+    private final boolean feeder2;
+    private final boolean outer_feeder;
+    private final boolean solar_pump;
+    private final boolean fireplace_pump;
+    private final boolean gcz_contactp;
+    private final boolean blow_fan1;
+    private final boolean blow_fan2;
 
     private long rawState;
 

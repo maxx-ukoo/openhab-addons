@@ -57,27 +57,27 @@ public abstract class AbstractSerialListener implements SerialPortMessageListene
         try {
             Frame frame = null;
             if (FrameParcer.isFullFrame(delimitedMessage)) {
+                logger.trace("Full frame detected");
                 start_data = new byte[0];
                 frame = FrameParcer.parce(delimitedMessage);
             } else {
+                logger.trace("Partial frame detected");
                 int current_lenght = start_data.length;
                 start_data = Arrays.copyOf(start_data, start_data.length + delimitedMessage.length);
                 for (int i = 0; i < delimitedMessage.length; i++) {
                     start_data[current_lenght + i] = delimitedMessage[i];
                 }
                 if (FrameParcer.isFullFrame(start_data)) {
+                    logger.trace("Full frame detected after concat");
                     frame = FrameParcer.parce(start_data);
                     start_data = new byte[0];
                 }
             }
             if (frame != null) {
-                // logger.trace("{}", Frame.getRAWFrameAsString(frame));
-                // logger.debug("{}", frame);
                 byte[] response = processFrame(frame);
                 if (response.length > 0) {
-                    // logger.debug("Response: {}", Frame.getRAWFrameAsString(FrameParcer.parce(response)));
+                    logger.trace("Add received message to the queueFrame");
                     EcoMaxDevice.queueFrame.add(FrameParcer.parce(response));
-                    // event.getSerialPort().writeBytes(response, response.length);
                 }
             }
         } catch (Exception e) {

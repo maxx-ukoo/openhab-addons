@@ -33,7 +33,7 @@ public class DeviceData {
 
     private long lastUpdateTime = 0;
 
-    private List<SchemaType> schema = new ArrayList<>();
+    private final List<SchemaType> schema = new ArrayList<>();
     private Map<SchemaType, SchemaValue> data = new HashMap<>();
 
     public boolean isDataValid() {
@@ -46,13 +46,13 @@ public class DeviceData {
     }
 
     public boolean isSchemaValid() {
-        return schema.size() > 0;
+        return !schema.isEmpty();
     }
 
     public void setSchema(List<SchemaType> schema) {
         this.schema.clear();
         lastUpdateTime = 0;
-        if (schema == null || schema.size() == 0) {
+        if (schema.isEmpty()) {
             return;
         }
         for (SchemaType value : schema) {

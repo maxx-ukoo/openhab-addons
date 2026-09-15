@@ -12,9 +12,7 @@
  */
 package org.openhab.binding.plumecomax.internal.device.protocol.frame.message;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.plumecomax.internal.device.DeviceData;
@@ -38,23 +36,20 @@ public class MessageRegulatorData {
             throw new IllegalArgumentException(String.format("Wrong frame type: %02X", data[offset - 1]));
         }
         int frameVersion = Byte.toUnsignedInt(data[offset]) + (Byte.toUnsignedInt(data[offset + 1]) << 8);
-        // System.out.println("Frame version: " + frameVersion);
-        // TODO calculate version and check for update
+        logger.trace("frameVersion: {}", frameVersion);
         offset = 3;
         String dataVersion = String.format("%s.%s", data[offset + 1], data[offset]);
-        // System.out.println(dataVersion);
+        logger.trace("dataVersion: {}", dataVersion);
         offset += 2;
         int versionSize = Byte.toUnsignedInt(data[offset++]);
-        // System.out.println("Version size: " + versionSize);
-        Map<FrameType, Integer> versionMap = new HashMap<>();
+
         for (int i = 0; i < versionSize; i++) {
             FrameType frameType = FrameType.getType(Byte.toUnsignedInt(data[offset]));
             int version = Byte.toUnsignedInt(data[offset + 1]) + (Byte.toUnsignedInt(data[offset + 2]) << 8);
-            versionMap.put(frameType, version);
+            logger.trace("frameType: {}, version: {}", frameType, version);
             offset += 3;
         }
-        // System.out.println(versionMap);
-        // int schemaPosition = 0;
+
         int dataPosition = offset;
         int booleanIndex = 0;
         int booleanByte = 0;
@@ -62,7 +57,6 @@ public class MessageRegulatorData {
         for (int schemaPosition = 0; schemaPosition < schema.size(); schemaPosition++) {
             SchemaType schemaType = schema.get(schemaPosition);
             Object value;
-            // int valueId = schemaValue.getValueId();
             switch (schemaType.getType()) {
                 case SignedChar:
                 case Byte: {
@@ -72,7 +66,6 @@ public class MessageRegulatorData {
                 case Boolean: {
                     if (booleanIndex == 0) {
                         booleanByte = Byte.toUnsignedInt(data[dataPosition++]);
-
                     }
                     value = (booleanByte & (1 << booleanIndex)) > 0;
                     booleanIndex++;
@@ -118,11 +111,10 @@ public class MessageRegulatorData {
                 }
                 case UInt64:
                 case Int64: {
-                    Long lval = (((data[dataPosition + 54] & 0xffL)) | ((data[dataPosition + 6] & 0xffL) << 48)
+                    value = (((data[dataPosition + 54] & 0xffL)) | ((data[dataPosition + 6] & 0xffL) << 48)
                             | ((data[dataPosition + 5] & 0xffL) << 40) | ((data[dataPosition + 4] & 0xffL) << 32))
                             + (((data[dataPosition + 3] & 0xffL) << 24) | ((data[dataPosition + 2] & 0xffL) << 16)
                                     | ((data[dataPosition + 1] & 0xffL) << 8) | (data[dataPosition] & 0xff));
-                    value = lval;
                     dataPosition += 8;
                     break;
                 }
@@ -153,14 +145,12 @@ public class MessageRegulatorData {
             }
             SchemaValue schemaValue = new SchemaValue(schemaType, value);
             deviceData.setValue(new SchemaValue(schemaType, value));
-            logger.trace("Set value: {}", schemaValue);
-            // logger.trace("Get value: {}", deviceData.getValue(DataValue.getDataType(schemaType.getValueId())));
-            // System.out.println(schemaValue);
+            logger.trace("Set value: {} for {}", schemaValue, schemaType);
         }
     }
 
-    private static float toFloatValue(byte[] data, int offset) {
-        return Float.intBitsToFloat((((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
-                | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-    }
+    // private static float toFloatValue(byte[] data, int offset) {
+    // return Float.intBitsToFloat((((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+    // | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+    // }
 }

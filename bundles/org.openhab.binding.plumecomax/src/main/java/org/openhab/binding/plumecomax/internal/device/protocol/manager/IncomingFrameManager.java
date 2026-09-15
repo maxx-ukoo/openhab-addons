@@ -75,7 +75,7 @@ public class IncomingFrameManager {
 
     private byte[] processMessageSensorData(Frame frame) {
         logger.debug("Processing sensor data frame");
-        logger.debug("SensorData frame: {}", Frame.getRAWFrameAsString(frame));
+        logger.trace("SensorData frame: {}", Frame.getRAWFrameAsString(frame));
         SensorData sensorData = MessageSensorData.fromByteArray(frame.getBody());
         device.setSensorData(sensorData);
         return EMPTY_RESPONSE;

@@ -218,7 +218,7 @@ public class PlumEcoMAXHandler extends BaseThingHandler {
     private void publishChannel(ChannelUID channelUID) {
         String channelID = channelUID.getId();
         try {
-            // logger.info("Publishing channel: {}", channelUID.getIdWithoutGroup());
+            logger.trace("Publishing channel: {}", channelUID.getIdWithoutGroup());
             State state = switch (channelUID.getIdWithoutGroup()) {
                 case BOILER_TEMP -> new QuantityType<>(
                         (Float) device.getDeviceData().getValue(DataValue.TEMPERATURE_BOILER), SIUnits.CELSIUS);

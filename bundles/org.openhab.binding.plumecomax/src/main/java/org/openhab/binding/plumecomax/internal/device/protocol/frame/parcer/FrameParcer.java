@@ -41,16 +41,16 @@ import org.openhab.binding.plumecomax.internal.device.protocol.frame.FrameType;
 public class FrameParcer {
 
     public static Frame parce(byte[] data) {
-        if (!isLengthOK(data)) {
+        if (isWrongLength(data)) {
             throw new IllegalArgumentException(String.format("Wrong data lenght, expected > 9, has: %s", data.length));
         }
-        if (!isStartByteOK(data)) {
+        if (isWrongStartByte(data)) {
             throw new IllegalArgumentException(String.format("Wrong start byte: %02X", data[START_BYTE]));
         }
-        if (!isEndByteOK(data)) {
+        if (isWrongEndByte(data)) {
             throw new IllegalArgumentException(String.format("Wrong end byte: %02X", data[data.length - 1]));
         }
-        if (!isFrameSizeOK(data)) {
+        if (isWrongFrameSize(data)) {
             throw new IllegalArgumentException(String.format("Wrong format[frame size], expect %d bytes, has %d bytes",
                     getFrameSize(data), data.length));
         }
@@ -75,17 +75,17 @@ public class FrameParcer {
     }
 
     public static boolean isFullFrame(byte[] data) {
-        if (!isLengthOK(data)) {
+        if (isWrongLength(data)) {
             return false;
         }
-        if (!isStartByteOK(data)) {
+        if (isWrongStartByte(data)) {
             return false;
         }
 
-        if (!isFrameSizeOK(data)) {
+        if (isWrongFrameSize(data)) {
             return false;
         }
-        if (!isEndByteOK(data)) {
+        if (isWrongEndByte(data)) {
             return false;
         }
         byte localCRC = Frame.getCRC(Arrays.copyOfRange(data, 0, data.length - 2));
@@ -96,33 +96,33 @@ public class FrameParcer {
         return true;
     }
 
-    private static boolean isLengthOK(byte[] data) {
+    private static boolean isWrongLength(byte[] data) {
         if (data.length < 10) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private static boolean isStartByteOK(byte[] data) {
+    private static boolean isWrongStartByte(byte[] data) {
         if (FRAME_START_BYTE != data[START_BYTE]) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private static boolean isEndByteOK(byte[] data) {
+    private static boolean isWrongEndByte(byte[] data) {
         if (FRAME_END_BYTE != data[data.length - 1]) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private static boolean isFrameSizeOK(byte[] data) {
+    private static boolean isWrongFrameSize(byte[] data) {
         int frameSize = getFrameSize(data);
         if (frameSize != data.length) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private static int getFrameSize(byte[] data) {
